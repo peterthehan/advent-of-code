@@ -1,18 +1,5 @@
 const { readFileSync } = require("fs");
 
-const answer = readFileSync("./input", "utf8")
-  .split("\n")
-  .map(sanitizeLine)
-  .map(parseLineIntoGame)
-  .map(findMinCubeSet)
-  .reduce((sum, round) => {
-    return (
-      sum + Object.values(round).reduce((product, value) => product * value, 1)
-    );
-  }, 0);
-
-console.log(answer); // 54699
-
 function sanitizeLine(line) {
   return line.trim();
 }
@@ -45,3 +32,16 @@ function findMinCubeSet(game) {
     return obj;
   }, {});
 }
+
+const answer = readFileSync("./input", "utf8")
+  .split("\n")
+  .map(sanitizeLine)
+  .map(parseLineIntoGame)
+  .map(findMinCubeSet)
+  .reduce((sum, round) => {
+    return (
+      sum + Object.values(round).reduce((product, value) => product * value, 1)
+    );
+  }, 0);
+
+console.log(answer); // 54699

@@ -6,15 +6,6 @@ const availableColorsMap = {
   blue: 14,
 };
 
-const answer = readFileSync("./input", "utf8")
-  .split("\n")
-  .map(sanitizeLine)
-  .map(parseLineIntoGame)
-  .filter(findValidGames)
-  .reduce((sum, validGame) => sum + validGame.id, 0);
-
-console.log(answer); // 2593
-
 function sanitizeLine(line) {
   return line.trim();
 }
@@ -43,3 +34,12 @@ function findValidGames(game) {
     return colors.every((color) => round[color] <= availableColorsMap[color]);
   });
 }
+
+const answer = readFileSync("./input", "utf8")
+  .split("\n")
+  .map(sanitizeLine)
+  .map(parseLineIntoGame)
+  .filter(findValidGames)
+  .reduce((sum, validGame) => sum + validGame.id, 0);
+
+console.log(answer); // 2593

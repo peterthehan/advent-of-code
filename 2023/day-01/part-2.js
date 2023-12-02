@@ -12,26 +12,17 @@ const digitToNumber = {
   nine: "n9e",
 };
 
-const answer = readFileSync("./input", "utf8")
-  .split("\n")
-  .map(sanitizeLine)
-  .map(convertDigitToNumber)
-  .map(parseLineIntoNumber)
-  .reduce((sum, num) => sum + num, 0);
+function convertDigitToNumber(file) {
+  Object.keys(digitToNumber).forEach((digit) => {
+    const digitRegExp = RegExp(digit, "g");
+    file = file.replace(digitRegExp, digitToNumber[digit]);
+  });
 
-console.log(answer); // 53340
+  return file;
+}
 
 function sanitizeLine(line) {
   return line.trim();
-}
-
-function convertDigitToNumber(line) {
-  Object.keys(digitToNumber).forEach((digit) => {
-    const digitRegExp = RegExp(digit, "g");
-    line = line.replace(digitRegExp, digitToNumber[digit]);
-  });
-
-  return line;
 }
 
 function parseLineIntoNumber(line) {
@@ -40,3 +31,11 @@ function parseLineIntoNumber(line) {
   const secondNumber = chars.findLast((char) => !isNaN(char));
   return Number(`${firstNumber}${secondNumber}`);
 }
+
+const answer = convertDigitToNumber(readFileSync("./input", "utf8"))
+  .split("\n")
+  .map(sanitizeLine)
+  .map(parseLineIntoNumber)
+  .reduce((sum, num) => sum + num, 0);
+
+console.log(answer); // 53340
