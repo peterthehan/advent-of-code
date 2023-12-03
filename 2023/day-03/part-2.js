@@ -5,39 +5,36 @@ function sanitizeLine(line) {
 }
 
 function parseInput(line, lineIndex) {
-  const output = [];
-
-  const parts = line.split(/[^\d]+/).filter(Boolean);
   let startPosition = 0;
-  for (const part of parts) {
-    const startIndex = line.indexOf(part, startPosition);
-    const endIndex = startIndex + part.length;
-    startPosition = endIndex;
+  return line
+    .split(/[^\d]+/)
+    .filter(Boolean)
+    .map((part) => {
+      const index = line.indexOf(part, startPosition);
+      startPosition = index + part.length;
 
-    output.push({ lineIndex, part: Number(part), startIndex, endIndex });
-  }
-
-  return output;
+      return { part, lineIndex, index };
+    });
 }
 
 function getGearPositions(potentialPart) {
-  const { lineIndex, part, startIndex, endIndex } = potentialPart;
+  const { part, lineIndex, index } = potentialPart;
 
   const lineOffset = Math.max(0, lineIndex - 1);
-  const offset = Math.max(0, startIndex - 1);
+  const offset = Math.max(0, index - 1);
   const block = lines
     .slice(lineOffset, lineIndex + 2)
-    .map((line) => line.slice(offset, endIndex + 1));
+    .map((line) => line.slice(offset, index + part.length + 1));
 
   return block.map((line, l) => {
     if (!line.includes("*")) {
       return null;
     }
 
-    const gearIndex = line.indexOf("*") + offset;
     const gearLineIndex = lineOffset + l;
+    const gearIndex = line.indexOf("*") + offset;
 
-    return { part, gearIndex, gearLineIndex };
+    return { part, gearLineIndex, gearIndex };
   });
 }
 
@@ -48,12 +45,15 @@ const gearToPartMap = lines
   .flatMap(getGearPositions)
   .filter(Boolean)
   .reduce((gearToPartMap, gearPosition) => {
-    const { part, gearIndex, gearLineIndex } = gearPosition;
+    const { part, gearLineIndex, gearIndex } = gearPosition;
+
     const gearKey = `${gearLineIndex}-${gearIndex}`;
     if (!(gearKey in gearToPartMap)) {
       gearToPartMap[gearKey] = [];
     }
+
     gearToPartMap[gearKey].push(part);
+
     return gearToPartMap;
   }, {});
 
