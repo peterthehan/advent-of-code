@@ -27,12 +27,13 @@ function getGearPositions(potentialPart) {
     .map((line) => line.slice(offset, index + part.length + 1));
 
   return block.map((line, l) => {
-    if (!line.includes("*")) {
+    const gearOffsetIndex = line.indexOf("*");
+    if (gearOffsetIndex === -1) {
       return null;
     }
 
     const gearLineIndex = lineOffset + l;
-    const gearIndex = line.indexOf("*") + offset;
+    const gearIndex = gearOffsetIndex + offset;
 
     return { part, gearLineIndex, gearIndex };
   });
