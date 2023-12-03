@@ -20,11 +20,9 @@ function parseInput(line, lineIndex) {
 function isValidPart(potentialPart) {
   const { part, lineIndex, index } = potentialPart;
 
-  const lineOffset = Math.max(0, lineIndex - 1);
-  const offset = Math.max(0, index - 1);
   const block = lines
-    .slice(lineOffset, lineIndex + 2)
-    .map((line) => line.slice(offset, index + part.length + 1));
+    .slice(Math.max(0, lineIndex - 1), lineIndex + 2)
+    .map((line) => line.slice(Math.max(0, index - 1), index + part.length + 1));
 
   return Boolean(block.join("").match(/[^\d.]/));
 }
