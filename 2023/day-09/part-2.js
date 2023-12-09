@@ -5,25 +5,25 @@ function sanitizeLine(line) {
 }
 
 function parseInput(line) {
-  return line.split(" ").map(Number);
+  return line.split(" ").map(Number).reverse();
 }
 
 function findNextValue(numbers) {
   let currentNumbers = numbers;
-  const firstSequenceNumbers = [];
+  const lastSequenceNumbers = [];
 
   while (currentNumbers.some(Boolean)) {
     const nextNumbers = [];
     for (let i = 0; i < currentNumbers.length - 1; ++i) {
       nextNumbers.push(currentNumbers[i + 1] - currentNumbers[i]);
     }
-    firstSequenceNumbers.push(nextNumbers[0]);
+    lastSequenceNumbers.push(nextNumbers[nextNumbers.length - 1]);
     currentNumbers = nextNumbers;
   }
 
   return (
-    numbers[0] -
-    firstSequenceNumbers.reverse().reduce((sum, num) => num - sum, 0)
+    numbers[numbers.length - 1] +
+    lastSequenceNumbers.reduce((sum, num) => sum + num, 0)
   );
 }
 
